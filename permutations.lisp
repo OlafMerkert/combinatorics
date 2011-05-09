@@ -11,29 +11,29 @@
   "Go through all permutations of N objects by transposing neighboured
 objects.  TRANSPOSER should be a symmetric function in 2 number
 arguments, the places to transpose.  Places are numbered from 1 to N."
-  (cond ((= n 1))
-        ((= n 2) (funcall transposer 1 2))
-        (t (let ((forward nil))
-             (labels
-                 ;; n-1 transpositions to move the first to the last
-                 ((move-forward ()
-                    (loop for k from 2 to n
-                       do (funcall transposer (- k 1) k))
-                    (setf forward nil))
-                  ;; n-1 transpositions to move the last to the first
-                  (move-backward ()
-                    (loop for k from n downto 2
-                       do (funcall transposer (- k 1) k))
-                    (setf forward t))
-                  (new-transposer (i j)
-                    ;; FORWARD = T means N is currently in first place.
-                    (if* forward
-                         ((funcall transposer (+ i 1) (+ j 1))
-                          (move-forward))
-                         ((funcall transposer i j)
-                          (move-backward)))))
-               (move-backward)
-               (permutation-tp (- n 1) #'new-transposer))))))
+  (if (= n 1)
+      nil
+      (let ((forward nil))
+        (labels
+            ;; n-1 transpositions to move the first to the last
+            ((move-forward ()
+               (loop for k from 2 to n
+                  do (funcall transposer (- k 1) k))
+               (setf forward nil))
+             ;; n-1 transpositions to move the last to the first
+             (move-backward ()
+               (loop for k from n downto 2
+                  do (funcall transposer (- k 1) k))
+               (setf forward t))
+             (new-transposer (i j)
+               ;; FORWARD = T means N is currently in first place.
+               (if* forward
+                    ((funcall transposer (+ i 1) (+ j 1))
+                     (move-forward))
+                    ((funcall transposer i j)
+                     (move-backward)))))
+          (move-backward)
+          (permutation-tp (- n 1) #'new-transposer)))))
 
 (defun permutation-tp-fast (n transposer)
   #f
@@ -41,33 +41,33 @@ arguments, the places to transpose.  Places are numbered from 1 to N."
 objects.  TRANSPOSER should be a symmetric function in 2 number
 arguments, the places to transpose.  Places are numbered from 1 to N."
   (declare (fixnum n) (function transposer))
-  (cond ((= n 1))
-        ((= n 2) (funcall transposer 1 2))
-        (t (let ((forward nil))
-             (declare (boolean forward))
-             (labels
-                 ;; n-1 transpositions to move the first to the last
-                 ((move-forward ()
-                    (loop for k fixnum from 2 to n
-                       do (funcall transposer (the fixnum (- k 1)) k))
-                    (setf forward nil))
-                  ;; n-1 transpositions to move the last to the first
-                  (move-backward ()
-                    (loop for k fixnum from n downto 2
-                       do (funcall transposer (the fixnum (- k 1)) k))
-                    (setf forward t))
-                  (new-transposer (i j)
-                    (declare (fixnum i j))
-                    ;; FORWARD = T means N is currently in first place.
-                    (if* forward
-                         ((funcall transposer (the fixnum (+ i 1))
-                                   (the fixnum (+ j 1)))
-                          (move-forward))
-                         ((funcall transposer i j)
-                          (move-backward)))))
-               (declare (inline move-backward move-forward))
-               (move-backward)
-               (permutation-tp (the fixnum (- n 1)) #'new-transposer))))))
+  (if (= n 1)
+      nil
+      (let ((forward nil))
+        (declare (boolean forward))
+        (labels
+            ;; n-1 transpositions to move the first to the last
+            ((move-forward ()
+               (loop for k fixnum from 2 to n
+                  do (funcall transposer (the fixnum (- k 1)) k))
+               (setf forward nil))
+             ;; n-1 transpositions to move the last to the first
+             (move-backward ()
+               (loop for k fixnum from n downto 2
+                  do (funcall transposer (the fixnum (- k 1)) k))
+               (setf forward t))
+             (new-transposer (i j)
+               (declare (fixnum i j))
+               ;; FORWARD = T means N is currently in first place.
+               (if* forward
+                    ((funcall transposer (the fixnum (+ i 1))
+                              (the fixnum (+ j 1)))
+                     (move-forward))
+                    ((funcall transposer i j)
+                     (move-backward)))))
+          (declare (inline move-backward move-forward))
+          (move-backward)
+          (permutation-tp (the fixnum (- n 1)) #'new-transposer)))))
 
 (defun printing-transposer (n)
   (let ((map (amrange 1 n)))
