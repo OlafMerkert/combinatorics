@@ -67,7 +67,7 @@ arguments, the places to transpose.  Places are numbered from 1 to N."
                      (move-backward)))))
           (declare (inline move-backward move-forward))
           (move-backward)
-          (permutation-tp (the fixnum (- n 1)) #'new-transposer)))))
+          (permutation-tp-fast (the fixnum (- n 1)) #'new-transposer)))))
 
 (defun printing-transposer (n)
   (let ((map (amrange 1 n)))
