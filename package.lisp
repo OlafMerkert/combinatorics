@@ -4,8 +4,8 @@
   (:nicknames :ccb)
   (:use #:cl #:ol-utils)
   (:export
-   :permutation-rank
-   :permutation-unrank
-   :factorial
-   :permutation-tp
-   :array-transposer))
+   #:permutation-rank
+   #:permutation-unrank
+   #:factorial
+   #:permutation-tp
+   #:array-transposer))
